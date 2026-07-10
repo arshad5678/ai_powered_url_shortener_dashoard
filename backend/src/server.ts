@@ -68,24 +68,35 @@ const bootstrap = async (): Promise<void> => {
     // Connect to Redis before starting the HTTP server
     await connectRedis();
 
+    let retries = 3;
+    const startServer = () => {
+      server.listen(env.PORT, () => {
+        logger.info(`[Server] Listening on port ${env.PORT} in ${env.NODE_ENV} mode`);
+      });
+    };
+
     server.on('error', (err: any) => {
       if (err.code === 'EADDRINUSE') {
-        logger.error(
-          `[Server] Port ${env.PORT} is already in use by another process. ` +
-            `Please terminate the conflicting process or change your port by setting PORT in your .env file.\n` +
-            `Commands to identify conflicting process: lsof -i :${env.PORT}\n` +
-            `Command to terminate it: kill -9 <PID>`
-        );
-        process.exit(1);
+        if (retries > 0) {
+          logger.warn(`[Server] Port ${env.PORT} is busy, retrying in 500ms... (${retries} retries left)`);
+          retries--;
+          setTimeout(startServer, 500);
+        } else {
+          logger.error(
+            `[Server] Port ${env.PORT} is already in use by another process. ` +
+              `Please terminate the conflicting process or change your port by setting PORT in your .env file.\n` +
+              `Commands to identify conflicting process: lsof -i :${env.PORT}\n` +
+              `Command to terminate it: kill -9 <PID>`
+          );
+          process.exit(1);
+        }
       } else {
         logger.error('[Server] Server encountered an error:', err);
         process.exit(1);
       }
     });
 
-    server.listen(env.PORT, () => {
-      logger.info(`[Server] Listening on port ${env.PORT} in ${env.NODE_ENV} mode`);
-    });
+    startServer();
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error(`[Server] Bootstrap failed to start: ${errorMessage}`);
