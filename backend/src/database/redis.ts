@@ -10,8 +10,15 @@ let redisClient: RedisClientType | null = null;
  */
 export const getRedisClient = (): RedisClientType => {
   if (!redisClient) {
+    const isSecure = env.REDIS_URL.startsWith('rediss://');
     redisClient = createClient({
       url: env.REDIS_URL,
+      socket: isSecure
+        ? {
+            tls: true,
+            rejectUnauthorized: false,
+          }
+        : undefined,
     }) as RedisClientType;
 
     redisClient.on('error', (err) => {
