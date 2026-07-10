@@ -39,7 +39,13 @@ export class LinkRepository extends BaseRepository {
   async findByShortCode(shortCode: string): Promise<Link | null> {
     try {
       return await prisma.link.findFirst({
-        where: { shortCode, deletedAt: null },
+        where: {
+          OR: [
+            { shortCode },
+            { customAlias: shortCode },
+          ],
+          deletedAt: null,
+        },
       });
     } catch (error) {
       this.handleError(error, 'LinkRepository.findByShortCode');
