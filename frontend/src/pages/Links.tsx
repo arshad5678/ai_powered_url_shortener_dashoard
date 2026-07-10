@@ -1,51 +1,87 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Copy, Edit2, ExternalLink, Plus, Search, Trash } from 'lucide-react';
 
 import { Button } from '../components/common/Button.js';
 import { Table } from '../components/common/Table.js';
 import { Pagination } from '../components/common/Pagination.js';
-
-interface LinkMock {
-  id: string;
-  title: string;
-  originalUrl: string;
-  shortUrl: string;
-  clicks: number;
-  status: 'active' | 'disabled' | 'expired';
-}
+import { CreateLinkModal } from '../components/links/CreateLinkModal.js';
+import { api } from '../services/api.js';
+import { useToast } from '../contexts/ToastContext.js';
+import { Link } from '../types/index.js';
 
 export const Links: React.FC = () => {
-  const mockLinks: LinkMock[] = [
-    {
-      id: '1',
-      title: 'Summer Sale Deals',
-      originalUrl: 'https://example.com/products/summer-sale-deals-tracker',
-      shortUrl: 'http://localhost:5173/r/sumsal',
-      clicks: 1250,
-      status: 'active',
-    },
-    {
-      id: '2',
-      title: 'Winter Promotion Code',
-      originalUrl: 'https://example.com/winter-promo-code',
-      shortUrl: 'http://localhost:5173/r/wint26',
-      clicks: 840,
-      status: 'disabled',
-    },
-    {
-      id: '3',
-      title: 'Spring Discount Campaigns',
-      originalUrl: 'https://example.com/spring-discounts-camp',
-      shortUrl: 'http://localhost:5173/r/spring',
-      clicks: 0,
-      status: 'expired',
-    },
-  ];
+  const { showToast } = useToast();
+  
+  // State variables
+  const [links, setLinks] = useState<Link[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState('');
+  const [searchDebounced, setSearchDebounced] = useState('');
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Debounce search query changes
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setSearchDebounced(search);
+      setPage(1); // Reset to page 1 on search change
+    }, 400);
+
+    return () => clearTimeout(handler);
+  }, [search]);
+
+  // Fetch paginated links
+  const fetchLinks = async () => {
+    try {
+      setLoading(true);
+      const params: Record<string, any> = {
+        page,
+        limit,
+      };
+      if (searchDebounced) {
+        params.search = searchDebounced;
+      }
+
+      const res = await api.get('/api/links', { params });
+      
+      if (res.data?.success) {
+        setLinks(res.data.data.data);
+        setTotalPages(res.data.data.meta.totalPages);
+      }
+    } catch (err: any) {
+      const errMsg = err.response?.data?.message || err.message || 'Failed to fetch links';
+      showToast(errMsg, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLinks();
+  }, [page, searchDebounced, refreshKey]);
+
+  const triggerRefresh = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    showToast('Short URL copied to clipboard!', 'success');
+  };
+
+  const getStatusText = (linkItem: Link): 'active' | 'disabled' | 'expired' => {
+    if (!linkItem.isActive) return 'disabled';
+    if (linkItem.expiresAt && new Date(linkItem.expiresAt) < new Date()) return 'expired';
+    return 'active';
+  };
 
   const columns = [
     {
       header: 'Title & Destination',
-      accessor: (row: LinkMock) => (
+      accessor: (row: Link) => (
         <div className="flex flex-col gap-1 max-w-xs md:max-w-md">
           <span className="font-bold text-slate-800 dark:text-slate-200 truncate">{row.title}</span>
           <span className="text-[10px] text-slate-400 dark:text-slate-500 truncate select-all">{row.originalUrl}</span>
@@ -54,11 +90,11 @@ export const Links: React.FC = () => {
     },
     {
       header: 'Short URL',
-      accessor: (row: LinkMock) => (
+      accessor: (row: Link) => (
         <div className="flex items-center gap-2">
           <span className="text-indigo-600 dark:text-indigo-400 font-bold select-all">{row.shortUrl}</span>
           <button
-            onClick={() => navigator.clipboard.writeText(row.shortUrl)}
+            onClick={() => handleCopy(row.shortUrl)}
             className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer"
             title="Copy URL"
           >
@@ -68,29 +104,24 @@ export const Links: React.FC = () => {
       ),
     },
     {
-      header: 'Clicks',
-      accessor: (row: LinkMock) => (
-        <span className="font-bold text-slate-800 dark:text-slate-200">{row.clicks}</span>
-      ),
-    },
-    {
       header: 'Status',
-      accessor: (row: LinkMock) => {
+      accessor: (row: Link) => {
+        const status = getStatusText(row);
         const styles = {
           active: 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200/50 dark:border-emerald-900/30',
           disabled: 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-200/50 dark:border-slate-800/30',
           expired: 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 border-red-200/50 dark:border-red-900/30',
         };
         return (
-          <span className={`px-2 py-0.5 text-[9px] font-bold uppercase rounded-md border ${styles[row.status]}`}>
-            {row.status}
+          <span className={`px-2 py-0.5 text-[9px] font-bold uppercase rounded-md border ${styles[status]}`}>
+            {status}
           </span>
         );
       },
     },
     {
       header: 'Actions',
-      accessor: (row: LinkMock) => (
+      accessor: (row: Link) => (
         <div className="flex gap-1">
           <button className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 cursor-pointer" title="Edit Metadata">
             <Edit2 size={13} />
@@ -125,7 +156,12 @@ export const Links: React.FC = () => {
           </p>
         </div>
 
-        <Button variant="primary" size="sm" className="flex items-center gap-2">
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() => setIsCreateOpen(true)}
+          className="flex items-center gap-2"
+        >
           <Plus size={14} />
           Add Link
         </Button>
@@ -138,16 +174,25 @@ export const Links: React.FC = () => {
           <Search size={16} className="absolute left-3 top-2.5 text-slate-400 dark:text-slate-600" />
           <input
             placeholder="Search links title or alias..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg outline-none focus:ring-1 focus:ring-indigo-500 dark:text-slate-200"
           />
         </div>
       </div>
 
       {/* Main Table view */}
-      <Table columns={columns} data={mockLinks} />
+      <Table columns={columns} data={links} isLoading={loading} />
 
       {/* Pagination wrapper */}
-      <Pagination currentPage={1} totalPages={3} onPageChange={() => {}} />
+      <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+
+      {/* Reusable creation modal */}
+      <CreateLinkModal
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        onSuccess={triggerRefresh}
+      />
     </div>
   );
 };
