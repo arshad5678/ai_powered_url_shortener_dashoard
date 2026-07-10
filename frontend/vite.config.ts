@@ -4,29 +4,29 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@assets': path.resolve(__dirname, './src/assets'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@ui': path.resolve(__dirname, './src/components/ui'),
-      '@features': path.resolve(__dirname, './src/features'),
-      '@common': path.resolve(__dirname, './src/common'),
-      '@layouts': path.resolve(__dirname, './src/layouts'),
-      '@pages': path.resolve(__dirname, './src/pages'),
-      '@hooks': path.resolve(__dirname, './src/hooks'),
-      '@services': path.resolve(__dirname, './src/services'),
-      '@contexts': path.resolve(__dirname, './src/contexts'),
-      '@routes': path.resolve(__dirname, './src/routes'),
-      '@utils': path.resolve(__dirname, './src/utils'),
-      '@types': path.resolve(__dirname, './src/types'),
-      '@constants': path.resolve(__dirname, './src/constants'),
-      '@styles': path.resolve(__dirname, './src/styles'),
+      '@assets': path.resolve(dirname, './src/assets'),
+      '@components': path.resolve(dirname, './src/components'),
+      '@ui': path.resolve(dirname, './src/components/ui'),
+      '@features': path.resolve(dirname, './src/features'),
+      '@common': path.resolve(dirname, './src/common'),
+      '@layouts': path.resolve(dirname, './src/layouts'),
+      '@pages': path.resolve(dirname, './src/pages'),
+      '@hooks': path.resolve(dirname, './src/hooks'),
+      '@services': path.resolve(dirname, './src/services'),
+      '@contexts': path.resolve(dirname, './src/contexts'),
+      '@routes': path.resolve(dirname, './src/routes'),
+      '@utils': path.resolve(dirname, './src/utils'),
+      '@types': path.resolve(dirname, './src/types'),
+      '@constants': path.resolve(dirname, './src/constants'),
+      '@styles': path.resolve(dirname, './src/styles'),
     },
   },
   server: {
