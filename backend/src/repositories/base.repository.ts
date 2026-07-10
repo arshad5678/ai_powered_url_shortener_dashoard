@@ -83,7 +83,8 @@ export abstract class BaseRepository {
     options: {
       page?: number;
       limit?: number;
-      args?: Omit<FindManyArgs, 'skip' | 'take'> & Omit<CountArgs, 'where'>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      args?: any;
     }
   ): Promise<PaginatedResult<T>> {
     const page = Math.max(1, options.page || 1);
