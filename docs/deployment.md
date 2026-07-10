@@ -50,13 +50,16 @@ Configure this variable in your Vercel project panel:
 
 ### Render (Backend API Service)
 1. **Create New Web Service:** Connect your GitHub repository.
-2. **Build Settings:**
-   * **Runtime:** `Node`
-   * **Build Command:** `npm install && npm run build` (resolves dependencies, generates Prisma Client, compiles TS)
-   * **Start Command:** `npm run start` (starts compiled `dist/server.js`)
-3. **Advanced Settings:**
-   * **Release Command:** `npx prisma migrate deploy` (runs migrations automatically before deploying a new build)
-   * **Health Check Path:** `/health` (proactive health probes checking Express server status)
+2. **Build and Subdirectory Settings (Select Option A OR B):**
+   * **Option A (Recommended):** Set the **Root Directory** field under Advanced settings to `backend`. This tells Render to execute all operations inside the backend directory.
+     * **Build Command:** `npm install && npm run build`
+     * **Start Command:** `npm run start`
+     * **Release Command:** `npx prisma migrate deploy`
+   * **Option B (Root Execution):** If you leave the Root Directory field empty, prefix the commands to navigate into the backend folder:
+     * **Build Command:** `cd backend && npm install && npm run build`
+     * **Start Command:** `cd backend && npm run start`
+     * **Release Command:** `cd backend && npx prisma migrate deploy`
+3. **Health Check Path:** `/health` (proactive health probes checking Express server status)
 
 ### Vercel (Frontend Single Page App)
 1. **Create Project:** Select your GitHub repository.
