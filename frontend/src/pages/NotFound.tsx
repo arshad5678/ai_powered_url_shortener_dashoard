@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Sparkles } from 'lucide-react';
 
-import { Button } from '../components/common/Button.js';
+import { Button } from '@ui/Button.js';
 
 export const NotFound: React.FC = () => {
   const navigate = useNavigate();

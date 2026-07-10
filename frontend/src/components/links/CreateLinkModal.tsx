@@ -5,9 +5,9 @@ import { z } from 'zod';
 
 import { api } from '../../services/api.js';
 import { useToast } from '../../contexts/ToastContext.js';
-import { Button } from '../common/Button.js';
-import { Input } from '../common/Input.js';
-import { Modal } from '../common/Modal.js';
+import { Button } from '@ui/Button.js';
+import { Input } from '@ui/Input.js';
+import { Modal } from '@ui/Modal.js';
 
 interface CreateLinkModalProps {
   isOpen: boolean;

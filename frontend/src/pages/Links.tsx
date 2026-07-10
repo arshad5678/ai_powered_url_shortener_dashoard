@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Copy, Edit2, ExternalLink, Plus, Search, Trash } from 'lucide-react';
 
-import { Button } from '../components/common/Button.js';
-import { Table } from '../components/common/Table.js';
-import { Pagination } from '../components/common/Pagination.js';
+import { Button } from '@ui/Button.js';
+import { Table } from '@ui/Table.js';
+import { Pagination } from '@ui/Pagination.js';
 import { CreateLinkModal } from '../components/links/CreateLinkModal.js';
 import { api } from '../services/api.js';
 import { useToast } from '../contexts/ToastContext.js';

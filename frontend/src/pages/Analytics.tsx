@@ -1,8 +1,8 @@
 import React from 'react';
 import { BarChart3, Globe2, RefreshCw, Smartphone } from 'lucide-react';
 
-import { Button } from '../components/common/Button.js';
-import { Card } from '../components/common/Card.js';
+import { Button } from '@ui/Button.js';
+import { Card } from '@ui/Card.js';
 
 export const Analytics: React.FC = () => {
   return (

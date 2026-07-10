@@ -1,8 +1,8 @@
 import React from 'react';
 import { Key, Save, ShieldAlert } from 'lucide-react';
 
-import { Button } from '../components/common/Button.js';
-import { Card } from '../components/common/Card.js';
+import { Button } from '@ui/Button.js';
+import { Card } from '@ui/Card.js';
 
 export const Settings: React.FC = () => {
   return (
