@@ -217,6 +217,7 @@ export const Analytics: React.FC = () => {
               <option value={7}>Last 7 Days</option>
               <option value={30}>Last 30 Days</option>
               <option value={90}>Last 90 Days</option>
+              <option value={90}>All Time</option>
             </select>
           )}
 
@@ -424,12 +425,12 @@ export const Analytics: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block mb-0.5">
-                      Aggregate CTR
+                      Average Clicks Per Link
                     </span>
                     <h3 className="text-xl font-black text-slate-900 dark:text-slate-100 leading-tight">
                       {dashboardStats.links.total > 0
-                        ? `${((dashboardStats.clicks.total / dashboardStats.links.total) * 10).toFixed(1)}%`
-                        : '0.0%'}
+                        ? (dashboardStats.clicks.total / dashboardStats.links.total).toFixed(1)
+                        : '0.0'}
                     </h3>
                   </div>
                 </Card>
@@ -616,25 +617,39 @@ export const Analytics: React.FC = () => {
                     <span className="text-xs">No referrer stats logged.</span>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-4">
-                    {analyticsData.referrers.map((referrer, i) => (
-                      <div key={i} className="flex flex-col gap-1.5">
-                        <div className="flex justify-between items-center text-xs font-bold">
-                          <span className="text-slate-700 dark:text-slate-300">
-                            {referrer.name || 'Direct / Bookmark'}
-                          </span>
-                          <span className="text-slate-500">
-                            {referrer.count.toLocaleString()} clicks ({getPercentage(referrer.count, analyticsData.totalClicks)})
-                          </span>
-                        </div>
-                        <div className="w-full bg-slate-50 dark:bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-100 dark:border-slate-800">
-                          <div
-                            className="bg-indigo-650 h-full rounded-full"
-                            style={{ width: getPercentage(referrer.count, analyticsData.totalClicks) }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                  <div className="h-64 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={analyticsData.referrers.map((r) => ({
+                          name: r.name || 'Direct / Bookmark',
+                          count: r.count,
+                        }))}
+                        layout="vertical"
+                        margin={{ left: 10, right: 30 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" className="dark:stroke-slate-800/50" />
+                        <XAxis type="number" fontSize={10} tickLine={false} axisLine={false} stroke="#94a3b8" />
+                        <YAxis
+                          dataKey="name"
+                          type="category"
+                          fontSize={10}
+                          tickLine={false}
+                          axisLine={false}
+                          stroke="#94a3b8"
+                          width={110}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            background: '#090d16',
+                            border: 'none',
+                            borderRadius: '8px',
+                            color: '#fff',
+                            fontSize: '11px',
+                          }}
+                        />
+                        <Bar dataKey="count" fill="#f59e0b" radius={[0, 4, 4, 0]} barSize={20} />
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
                 )}
               </Card>
