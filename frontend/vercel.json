@@ -1,6 +1,22 @@
 {
   "rewrites": [
     {
+      "source": "/(links|analytics|settings)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/vite.svg",
+      "destination": "/vite.svg"
+    },
+    {
+      "source": "/:shortCode([a-zA-Z0-9_-]{3,20})",
+      "destination": "https://ai-powered-url-shortener-dashoard.onrender.com/r/:shortCode"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

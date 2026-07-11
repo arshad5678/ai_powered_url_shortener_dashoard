@@ -251,9 +251,14 @@ export const Analytics: React.FC = () => {
             </div>
             <div className="flex flex-col gap-0.5">
               <div className="flex items-center gap-1.5 text-xs">
-                <span className="font-bold text-indigo-650 dark:text-indigo-400 select-all">
+                <a
+                  href={selectedLinkMeta.shortUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-bold text-indigo-650 dark:text-indigo-400 hover:underline select-all cursor-pointer"
+                >
                   {selectedLinkMeta.shortUrl}
-                </span>
+                </a>
                 <ChevronRight size={12} className="text-slate-400" />
                 <a
                   href={selectedLinkMeta.originalUrl}

@@ -216,9 +216,14 @@ export const Links: React.FC = () => {
       header: 'Short URL',
       accessor: (row: Link) => (
         <div className="flex items-center gap-2">
-          <span className="text-indigo-650 dark:text-indigo-400 font-bold select-all select-text">
+          <a
+            href={row.shortUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-650 dark:text-indigo-400 font-bold hover:underline select-all select-text cursor-pointer"
+          >
             {row.shortUrl}
-          </span>
+          </a>
           <button
             onClick={() => handleCopy(row.shortUrl)}
             className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer transition-colors"

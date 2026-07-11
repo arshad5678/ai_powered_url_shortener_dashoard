@@ -33,5 +33,14 @@ export default defineConfig({
     port: 5173,
     host: true,
     strictPort: true,
+    proxy: {
+      // Proxy shortcode redirects to the backend in local development
+      // Matches any 3 to 20 char alphanumeric slug that is not a frontend route/asset
+      '^/(?!links|analytics|settings|assets|vite.svg|$)[a-zA-Z0-9_-]{3,20}$': {
+        target: 'http://localhost:5050',
+        changeOrigin: true,
+        rewrite: (path) => `/r${path}`,
+      },
+    },
   },
 });
