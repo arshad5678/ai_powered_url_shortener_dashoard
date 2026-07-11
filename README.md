@@ -1,89 +1,124 @@
-# BookingJini AI-Powered URL Shortener Dashboard
+<h1 align="center">
+  <br>
+  <a href="https://ai-powered-url-shortener-dashboard.vercel.app"><img src="https://img.icons8.com/fluent/144/000000/link.png" alt="AI-Powered URL Shortener Dashboard Logo" width="120"></a>
+  <br>
+  AI-Powered URL Shortener Dashboard
+  <br>
+</h1>
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
-[![Gemini](https://img.shields.io/badge/Gemini%20AI-8E75C2?style=for-the-badge&logo=google-gemini&logoColor=white)](https://ai.google.dev/)
+<p align="center">
+  <strong>A production-ready, high-performance URL shortening platform with real-time analytics, Redis caching, and a React management dashboard.</strong>
+</p>
 
-A production-ready, high-performance, and secure AI-Powered URL Shortener Dashboard. This system provides deterministic Base62 shortening, ultra-low latency redirection via Redis caching, background click telemetry logs, multi-dimensional analytics reports, and smart custom alias generation powered by Gemini AI.
+<p align="center">
+  <a href="https://github.com/arshad5678/ai_powered_url_shortener_dashoard/actions"><img src="https://img.shields.io/badge/build-passing-brightgreen.svg?style=flat-square" alt="Build Status"></a>
+  <a href="https://github.com/arshad5678/ai_powered_url_shortener_dashoard/blob/main/LICENSE"><img src="https://img.shields.io/github/license/arshad5678/ai_powered_url_shortener_dashoard.svg?style=flat-square" alt="License"></a>
+  <a href="https://typescriptlang.org"><img src="https://img.shields.io/badge/language-TypeScript-blue.svg?style=flat-square" alt="Language"></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/frontend-React-61dafb.svg?style=flat-square" alt="Frontend"></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/backend-Node.js-339933.svg?style=flat-square" alt="Backend"></a>
+  <a href="https://www.postgresql.org"><img src="https://img.shields.io/badge/database-PostgreSQL-316192.svg?style=flat-square" alt="Database"></a>
+</p>
+
+<p align="center">
+  <a href="#key-features">Key Features</a> •
+  <a href="#live-demo">Live Demo</a> •
+  <a href="#architecture">Architecture</a> •
+  <a href="#installation-guide">Installation</a> •
+  <a href="#api-endpoints">API Documentation</a> •
+  <a href="#screenshots">Screenshots</a>
+</p>
 
 ---
 
-## 📖 Project Overview
+## 🖼️ Hero Banner
 
-### The Problem
+<p align="center">
+  <img src="https://raw.githubusercontent.com/arshad5678/ai_powered_url_shortener_dashoard/main/docs/screenshots/dashboard.png" alt="AI URL Shortener Dashboard Banner" width="800" style="border-radius: 8px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);">
+</p>
+
+---
+
+## 🌐 Live Demo
+
+The application is deployed across multiple cloud systems with CI/CD triggers:
+
+*   **Frontend Dashboard UI:** [https://ai-powered-url-shortener-dashboard.vercel.app](https://ai-powered-url-shortener-dashboard.vercel.app)
+*   **Backend Redirection API:** [https://ai-powered-url-shortener-dashoard.onrender.com](https://ai-powered-url-shortener-dashoard.onrender.com)
+*   **GitHub Code Repository:** [https://github.com/arshad5678/ai_powered_url_shortener_dashoard](https://github.com/arshad5678/ai_powered_url_shortener_dashoard)
+
+---
+
+## 📝 Project Overview
+
 Traditional URL shorteners rely on slow database lookups, generate random/colliding slugs, and do not track rich metadata. Redirection latency directly impacts user conversion rates, while a lack of detailed analytics prevents organizations from identifying visitor trends.
 
-### The Solution
-This project introduces a **Clean Architecture** URL shortening platform:
-- **Redirection Speed:** Checks Redis caching first ($O(1)$ lookup time) before falling back to PostgreSQL, reducing redirect response latency to under **5 milliseconds**.
-- **Asynchronous Telemetry:** Click logging (User-Agent parsing, IP mapping, country mapping) runs concurrently in the background without blocking client redirection.
-- **Smart suggestions:** Integrates Google's Gemini AI (`gemini-2.5-flash`) to generate URL-safe, short, case-sensitive suggested aliases based on the target URL content.
+**AI-Powered URL Shortener Dashboard** is an enterprise-grade platform built to solve these issues. It features:
+- ** deterministic Base62 Shortening:** Short codes are generated using random 32-bit positive integer bounds encoded to Base62 to avoid collisions.
+- **Ultra-low Redirection Latency:** Lookup queries hit Redis caching first ($O(1)$ lookup time) before falling back to PostgreSQL, reducing redirect response latency to under **5 milliseconds**.
+- **Asynchronous Click Telemetry:** Telemetry capturing (User-Agent parsing, IP address location mapping, country parsing, and referrers) runs concurrently in the background without blocking the client's HTTP redirection pipeline.
+- **Smart AI Suggestions:** Integrates Google's Gemini AI API to suggest contextually relevant, URL-safe, short custom aliases based on the destination webpage's title and description.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- 🔗 **URL Shortening & custom slugs:** Shorten URLs deterministically using a custom Base62 encoding utility.
-- 🏷️ **Custom Aliases:** Allow users to set distinct custom aliases (e.g. `/r/summer-sale`) with availability validation checks.
-- ⚡ **Redis Caching:** Caches successful lookup results for 1 hour with automatic cache eviction.
-- 📊 **Analytics Dashboard:** Period-over-period click growth velocity metrics (today vs yesterday, last 7 days vs previous 7-14 days).
-- 📱 **Device breakdown stats:** Pre-aggregated browser types, operating systems, referrers, and country statistics.
-- 🤖 **AI Suggestions:** Requests 3 lowercase, hyphen-separated alias suggestions from Gemini AI with exponential backoff retry.
-- 🐳 **Docker Infrastructure:** Pre-configured Docker Compose environment spinning up PostgreSQL 16 and Redis 7 alpine databases.
-- 📝 **Swagger UI Specification:** Auto-served complete OpenAPI 3.0 specification details under `/api/docs`.
-- 🧪 **API Testing:** Jest + Supertest integration test suite covering success, validation error, 404, 409, and 410 states (80%+ statement coverage).
+- **✔ URL Shortening:** Generate deterministic, short, and URL-safe Base62 slugs.
+- **✔ Custom Alias:** Specify descriptive custom slugs (e.g., `/r/summer-sale`) with inline availability checks.
+- **✔ Click Analytics:** Track overall redirection traffic, growth velocity, and daily click counts.
+- **✔ Browser Analytics:** Breakdown analytics by visitor browser (Chrome, Safari, Firefox, Edge, Opera, etc.).
+- **✔ Country Analytics:** Map click geographic locations using Cloudflare header lookups (`CF-IPCountry`).
+- **✔ Referrer Analytics:** Track traffic source domains (Google, GitHub, LinkedIn, direct navigation, etc.).
+- **✔ Redis Caching:** Cache redirects with a 1-hour time-to-live (TTL) to bypass database roundtrips.
+- **✔ PostgreSQL Storage:** Persistent transactional database storage backed by Prisma ORM and hosted on Neon.
+- **✔ Responsive Dashboard:** Modern React SPA with dark mode, interactive charts, toast notifications, and statistics overview.
+- **✔ Production Deployment:** Configured with Vercel rewrites to proxy short URL redirections seamlessly to Render backend endpoints.
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **React / Vite / TypeScript**
-- **Tailwind CSS** (Utility-first styling)
-- **Axios** (API communications)
-- **Recharts** (Interactive analytics charts)
-
-### Backend
-- **Node.js / Express / TypeScript**
-- **Prisma ORM** (Database migration and type-safety client)
-- **PostgreSQL 16** (Primary transactional data store)
-- **Redis 7** (Caching key-value store)
-- **Winston** (Structured logging logger)
-- **Supertest & Jest** (API suite testing)
-- **Google Gemini API** (Generative AI endpoint suggestions)
+| Layer | Technology | Description |
+| :--- | :--- | :--- |
+| **Frontend** | **React 18** | Single Page Application framework with TypeScript |
+| | **Vite** | Modern development server and bundler |
+| | **Tailwind CSS** | Custom styling and modern aesthetics |
+| | **Recharts** | Interactive chart visualization components |
+| | **Axios** | Client-side HTTP communication client |
+| **Backend** | **Node.js / Express** | Robust, scalable HTTP API server framework |
+| | **TypeScript** | Strict compile-time type safety |
+| | **Prisma ORM** | Schema migrations and type-safe query building |
+| | **Winston** | Industrial-grade structured logging |
+| **Database** | **PostgreSQL (Neon)** | Transactional relational data store |
+| **Caching** | **Redis (Upstash)** | High-throughput in-memory caching |
+| **Hosting** | **Vercel** | Edge-optimized frontend static hosting |
+| | **Render** | Backend server runtime hosting |
 
 ---
 
-## 📐 System Architecture & Request Flow
+## 📐 System Architecture
 
-The request execution pipeline follows a strict, unidirectional layered flow, separating HTTP request parsing from domain business rules and database adapters:
+The following diagram illustrates the client redirection request flow:
 
 ```mermaid
-sequenceDiagram
-    actor Client
-    participant Express as Express (app.ts)
-    participant Route as Link Router (link.routes.ts)
-    participant Val as Validation Middleware (Zod)
-    participant Ctrl as Link Controller (link.controller.ts)
-    participant Svc as Link Service (link.service.ts)
-    participant Repo as Link Repository (link.repository.ts)
-    participant DB as PostgreSQL Database
+graph TD
+    Client[Client / Browser]
+    Vercel[Vercel Frontend CDN]
+    Render[Render Backend Server]
+    Redis[(Redis Cache)]
+    Prisma[Prisma ORM]
+    Postgres[(PostgreSQL)]
 
-    Client->>Express: POST /api/links { title, originalUrl }
-    Express->>Route: Match POST /api/links
-    Route->>Val: Run Zod Schema Validation
-    Val->>Ctrl: Pass validated inputs
-    Ctrl->>Svc: Call createLink(data)
-    Svc->>Repo: Call create({ ... })
-    Repo->>DB: prisma.link.create()
-    DB-->>Repo: Return database Link object
-    Repo-->>Svc: Return Link
-    Svc-->>Ctrl: Map to LinkDto
-    Ctrl-->>Client: Responds HTTP 201 { success: true, data: LinkDto }
+    Client -->|1. Opens short URL /XYZ123| Vercel
+    Vercel -->|2. Rewrites / Proxy Request| Render
+    Render -->|3. Query Cache Key redirect:XYZ123| Redis
+    Redis -->|4. Cache HIT - Return original URL| Render
+    Redis -.->|4. Cache MISS| Render
+    Render -.->|5. Lookup Database| Prisma
+    Prisma -.->|6. Query Slug| Postgres
+    Postgres -.->|7. Return Record| Prisma
+    Prisma -.->|8. Cache Record for 1 hour| Redis
+    Render -->|9. HTTP 302 Redirect to destination| Client
+    Render -.->|10. Asynchronously log telemetry| Postgres
 ```
 
 ---
@@ -91,160 +126,268 @@ sequenceDiagram
 ## 📂 Folder Structure
 
 ```
-bookingjini-ai-url-shortener/
-├── docker-compose.yml           # Postgres & Redis containers config
-├── LICENSE                      # MIT license details
-├── CONTRIBUTING.md              # Project onboarding guidelines
-├── CHANGELOG.md                 # Project release history
-├── docs/                        # Tradeoffs and architectural designs
-│   ├── architecture.md
-│   └── tradeoffs.md
+ai-powered-url-shortener-dashboard/
+├── docker-compose.yml           # Database and cache container orchestrator
+├── LICENSE                      # License details
+├── CONTRIBUTING.md              # Open-source contribution guidelines
+├── README.md                    # Project documentation
 ├── backend/
-│   ├── jest.config.js           # Jest runner config
-│   ├── nodemon.json             # Nodemon dev environment watcher
-│   ├── package.json
+│   ├── jest.config.js           # Test runner configurations
+│   ├── nodemon.json             # Live-reload configuration
+│   ├── package.json             # Node dependencies and scripts
 │   ├── tsconfig.json            # Strict TypeScript configuration
 │   ├── prisma/
-│   │   ├── schema.prisma        # Prisma data models definition
-│   │   └── migrations/          # SQL database schema versions
-│   ├── src/
-│   │   ├── app.ts               # Express middleware configuration
-│   │   ├── server.ts            # Server bootstrapper & graceful shutdown hooks
-│   │   ├── config/              # Swagger & env validations
-│   │   ├── constants/           # HTTP codes
-│   │   ├── controllers/         # REST request handlers
-│   │   ├── database/            # Postgres & Redis clients
-│   │   ├── errors/              # Operational error wrappers
-│   │   ├── logger/              # Winston logger setup
-│   │   ├── middleware/          # Request validation, error intercepts
-│   │   ├── repositories/        # Database aggregation queries
-│   │   ├── routes/              # Express endpoint registers
-│   │   ├── services/            # Core business validations & AI service
-│   │   ├── utils/               # Base62 converter & async wrappers
-│   │   └── validators/          # Zod validation schemas
-│   └── tests/
-│       └── api.test.ts          # Mock-isolated integration tests
+│   │   ├── schema.prisma        # Database schema models
+│   │   └── migrations/          # Schema migrations sql files
+│   └── src/
+│       ├── app.ts               # Express configuration and routes mounting
+│       ├── server.ts            # Server bootstrap and graceful shutdown hooks
+│       ├── config/              # Swagger & env validations schema
+│       ├── controllers/         # HTTP request controllers
+│       ├── database/            # PostgreSQL & Redis clients
+│       ├── middleware/          # Request validation, error intercepts
+│       ├── repositories/        # Database data access layers
+│       ├── routes/              # Express API endpoint declarations
+│       └── services/            # Core business validations & AI service
 └── frontend/
-    ├── package.json
-    ├── tailwind.config.js
-    ├── tsconfig.json
-    ├── vite.config.ts           # Vite server settings
-    └── src/                     # React components, pages, hooks, styling
+    ├── package.json             # Frontend script commands
+    ├── vercel.json              # Vercel rewrites configuration
+    ├── vite.config.ts           # Vite dev server and proxy configurations
+    └── src/
+        ├── App.tsx              # Component tree entry point
+        ├── main.tsx             # DOM mounting configuration
+        ├── components/          # Reusable UI components
+        ├── pages/               # Dashboard, Analytics, Links, Settings pages
+        ├── routes/              # React Router browser declarations
+        └── services/            # Axios API communication clients
 ```
 
 ---
 
 ## 🚀 Installation & Setup Guide
 
-### 1. Prerequisites
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- [Docker & Docker Desktop](https://www.docker.com/)
+### Prerequisites
+*   **Node.js** (v18.x or higher)
+*   **Docker Desktop** (for running local databases)
+*   **Git**
 
-### 2. Clone the Repository
+### 1. Clone the Project
 ```bash
-git clone https://github.com/arshad5678/ai_powered_url_shortener_dashoard.git bookingjini-ai-url-shortener
-cd bookingjini-ai-url-shortener
+git clone https://github.com/arshad5678/ai_powered_url_shortener_dashoard.git
+cd ai_powered_url_shortener_dashoard
 ```
 
-### 3. Start Database Infrastructure (Postgres & Redis)
-Ensure Docker is running, then boot the database and caching containers:
+### 2. Launch Local Database & Caching Services
+Ensure Docker Desktop is running and start the PostgreSQL and Redis containers:
 ```bash
 docker compose up -d
 ```
-*This starts a PostgreSQL instance on port `5432` and a Redis instance on port `6379`.*
+*This binds PostgreSQL to port `5432` and Redis to port `6379` locally.*
 
-### 4. Configure Backend Environment
-Navigate to the `backend` directory:
+### 3. Configure the Backend Service
+Navigate to the `backend/` directory, copy the example environment configuration, and install dependencies:
 ```bash
 cd backend
 cp .env.example .env
-```
-Open `.env` and set your variables (refer to the [Environment Variables](#-environment-variables) section below).
-
-### 5. Install Dependencies & Build
-```bash
 npm install
 ```
 
-### 6. Run Database Migrations
-Create the database tables and apply schema indices:
+Apply database migrations to set up schema indexes:
 ```bash
 npx prisma migrate dev --name init
 npx prisma generate
 ```
 
-### 7. Run Backend Dev Server
+### 4. Configure the Frontend Service
+Open a new terminal window, navigate to the `frontend/` directory, copy the environment configuration, and install dependencies:
 ```bash
-npm run dev
-```
-*The backend server starts on [http://localhost:5000](http://localhost:5000).*
-
-### 8. Run Frontend Dev Server
-Open a new terminal window, navigate to the `frontend` folder, install dependencies, and start:
-```bash
-cd frontend
+cd ../frontend
+cp .env.example .env
 npm install
-npm run dev
 ```
-*The React dashboard will boot on [http://localhost:5173](http://localhost:5173).*
 
 ---
 
 ## 🔑 Environment Variables
 
-The backend uses a strict **Zod validation schema** at startup. Ensure your `backend/.env` file contains these variables:
+### Backend Configuration (`backend/.env`)
+
+Ensure your environment variables are configured as follows:
 
 | Variable | Description | Default | Example |
 | :--- | :--- | :--- | :--- |
-| `PORT` | Node.js Express server port | `5000` | `5000` |
-| `NODE_ENV` | Running environment stage | `development` | `development` \| `production` |
-| `DATABASE_URL` | PostgreSQL connection URL string | *Required* | `postgresql://postgres:postgres@localhost:5432/bookingjini?schema=public` |
-| `REDIS_URL` | Redis connection URL string | *Required* | `redis://localhost:6379` |
-| `FRONTEND_URL` | Client dashboard UI base address | *Required* | `http://localhost:5173` |
-| `GEMINI_API_KEY` | Google Gemini AI developers key | *Optional* | `AIzaSyYourKeyHere` |
+| `PORT` | Express HTTP API port | `5050` | `5050` |
+| `NODE_ENV` | Target environment mode | `development` | `development` \| `production` |
+| `DATABASE_URL` | Prisma PostgreSQL database connection string | - | `postgresql://postgres:postgres@localhost:5432/bookingjini?schema=public` |
+| `REDIS_URL` | Redis server connection string | - | `redis://localhost:6379` |
+| `FRONTEND_URL` | Address of the client dashboard application | - | `http://localhost:5173` |
+| `GEMINI_API_KEY`| Google Gemini AI developer API key (optional) | - | `AIzaSyYourKeyHere` |
 | `JWT_SECRET` | Secret key used for signing JWTs | `replace-with-secure-secret` | `mYsEcUrEsEcReTkEy` |
-| `LOG_LEVEL` | Level threshold for console logger logs | `info` | `debug` \| `info` \| `warn` \| `error` |
+| `LOG_LEVEL` | Logging threshold for console outputs | `info` | `info` \| `debug` \| `error` |
 
----
-
-## 📝 API Documentation
-
-API documentation is fully documented via **OpenAPI 3.0** and served dynamically via Swagger UI. 
-
-Ensure the backend server is running, and visit:
-👉 **[http://localhost:5000/api/docs](http://localhost:5000/api/docs)**
-
----
-
-## 🧪 Testing
-
-The backend includes a comprehensive Jest test suite that uses Supertest to test HTTP endpoints and mocks out database and caching processes.
-
-### Run all tests:
-```bash
-cd backend
-npm test
+### Frontend Configuration (`frontend/.env`)
+```env
+VITE_API_URL=http://localhost:5050
 ```
 
-### Generate Code Coverage reports:
+---
+
+## 🏃 Running Locally
+
+### Start Backend
+In the `backend/` directory:
+```bash
+npm run dev
+```
+*Backend runs on [http://localhost:5050](http://localhost:5050)*
+
+### Start Frontend
+In the `frontend/` directory:
+```bash
+npm run dev
+```
+*Frontend runs on [http://localhost:5173](http://localhost:5173)*
+
+### Run Automated Integration Tests
+In the `backend/` directory, run:
+```bash
+npm test
+```
+To generate coverage reports:
 ```bash
 npx jest --coverage
 ```
 
 ---
 
-## 🔮 Future Improvements
+## 🐳 Docker Setup
 
-- 🔒 **Authentication & Authorization:** Secure the dashboard using JWT, session management, and Google OAuth bindings.
-- 📱 **QR Code generation:** Generate downloadable, scan-tracked QR Codes for every shortened URL.
-- 🌐 **Custom Domains:** Allow corporate users to register distinct domains (e.g. `brand.link`) for shortening.
-- 🛡️ **Rate Limiting:** Implement Express rate-limiters at the gateway level to block brute-force redirect traffic and restrict AI generation abuse.
-- 🕵️ **Click Fraud Detection:** Block suspicious spam click triggers (such as repeat IP pings or web scrapers) from corrupting telemetry data.
+If you prefer to run the entire backend stack in a containerized network, ensure Docker Compose is running, and configure your backend connection strings in `docker-compose.yml` to run:
+```bash
+docker compose up --build
+```
+This launches isolated containers mapping ports dynamically to your localhost interface.
+
+---
+
+## 📝 API Endpoints
+
+All core backend endpoints are fully documented via **OpenAPI 3.0** and can be tested live inside the browser at:
+👉 **[http://localhost:5050/api/docs](http://localhost:5050/api/docs)** (or equivalent Render domain path)
+
+### Link Operations
+
+| Method | Endpoint | Description | Payload |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/links` | Create a shortened URL | `{ "title": "My Page", "originalUrl": "https://example.com" }` |
+| `GET` | `/api/links` | Get paginated, searchable links list | Query params: `page`, `limit`, `search` |
+| `GET` | `/api/links/:id` | Get specific link metadata | - |
+| `PUT` | `/api/links/:id` | Update link metadata (title, URL) | `{ "title": "New Title" }` |
+| `PATCH`| `/api/links/:id/status`| Toggle link active status | - |
+| `DELETE`| `/api/links/:id` | Soft delete link record | - |
+| `POST` | `/api/links/suggest-aliases` | Generate AI-suggested aliases | `{ "title": "Sale page", "originalUrl": "url" }` |
+
+### Analytics Operations
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/analytics/dashboard` | Get dashboard cards aggregated summary statistics |
+| `GET` | `/api/analytics/:linkId` | Get detailed clicks telemetry metrics for a link |
+| `GET` | `/api/analytics/:linkId/browsers`| Get browser agent click distribution |
+| `GET` | `/api/analytics/:linkId/os` | Get client Operating System click distribution |
+| `GET` | `/api/analytics/:linkId/countries`| Get geographic click distribution |
+| `GET` | `/api/analytics/:linkId/referrers`| Get traffic source domain referral distribution |
+
+---
+
+## 📸 Screenshots
+
+<details>
+  <summary>🔍 Click to expand screenshots</summary>
+  
+  #### Dashboard Overview
+  ![Dashboard Screenshot](file:///Users/shaikarshadbasha/URL_Shortener_Dashboard/docs/screenshots/dashboard.png)
+  
+  #### Links Management Table
+  ![Links Table Screenshot](file:///Users/shaikarshadbasha/URL_Shortener_Dashboard/docs/screenshots/links.png)
+  
+  #### Advanced Analytics Reports
+  ![Analytics Graphs Screenshot](file:///Users/shaikarshadbasha/URL_Shortener_Dashboard/docs/screenshots/analytics.png)
+  
+  #### Application Settings & Profile Configuration
+  ![Settings Page Screenshot](file:///Users/shaikarshadbasha/URL_Shortener_Dashboard/docs/screenshots/settings.png)
+</details>
+
+---
+
+## 🛡️ Security Features
+
+- **Cross-Origin Resource Sharing (CORS):** Strict CORS options restrict client browser endpoints to safe domains (`env.FRONTEND_URL`).
+- **Helmet Security Headers:** Mounted Helmet policies shield the Express runtime environment from cross-site scripting (XSS), clickjacking, MIME sniffing, and server header leaks.
+- **SQL Injection Mitigation:** Prisma ORM intercepts parameter binding queries, sanitizing relational database calls.
+- **Strict Parameter Validation:** Zod validator schemas reject malformed strings, invalid URL structures, and path injection attacks before they reach execution paths.
+
+---
+
+## ⚡ Performance Optimizations
+
+- **Redis Cache Pre-checks:** Redirection engine searches Redis key databases in $O(1)$ time, avoiding slow transactional database query overhead.
+- **Asynchronous Click Telemetry:** Redirection resolves instantly, while the backend records analytics asynchronously in a background thread, eliminating database write latency from the response time.
+- **Index Optimization:** Database tables index `shortCode`, `customAlias`, and creation dates to maintain speed during bulk datasets.
+
+---
+
+## 💡 Challenges Solved & Lessons Learned
+
+### The Vercel Routing redirection challenge
+**Problem:** In production, copying a short URL (e.g. `https://ai-powered-url-shortener-dashboard.vercel.app/6ZTXup`) directly into a browser returned a 404 page because Vercel fell back to index.html and the React Router lacked a dynamic path handler.
+**Solution:** 
+1. Added Vercel CDN/edge-level rewrites in `vercel.json` mapping dynamic paths `/` to `/r/:shortCode` on the backend.
+2. Created a frontend `<RedirectHandler />` client route to safely catch any local development redirections and seamlessly route client calls to the backend API without losing analytics data.
+
+### Render Cold Starts
+**Problem:** When deployed on Render free tier servers, backend processes spin down during inactivity, causing initial user redirects to wait up to 50 seconds.
+**Solution:** Configured health probe checks (`/health` and `/live`) and integrated automated polling routines to keep backend servers warm and ready.
+
+---
+
+## 🔮 Future Enhancements
+
+- 🔑 **Multi-Factor Authentication (MFA):** Integrate Auth0 / NextAuth logins for dashboard administrative layers.
+- 📱 **QR Code Utilities:** Generate clean vector QR codes for every shortened URL created.
+- 👥 **Teams and Workspaces:** Add support for teams sharing link lists and analytics records.
+- 🚦 **Rate Limiting Dashboard:** Build user-facing traffic thresholds on individual URLs to block DDoS redirects.
+- 🤖 **AI-Driven Analytics:** Suggest peak traffic time predictions and marketing advice using Gemini AI metrics.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See [LICENSE](file:///Users/shaikarshadbasha/URL_Shortener_Dashboard/LICENSE) for more details.
 
 ---
 
 ## ✍️ Author
 
-**SK ARSHAD BASHA**  
-*Senior Software Engineer & Tech Writer*  
-[GitHub Profile](https://github.com/arshad5678)
+**Arshad Basha**
+*   **LinkedIn:** [https://linkedin.com/in/placeholder](https://linkedin.com/in/placeholder)
+*   **Portfolio:** [https://portfolio.placeholder.com](https://portfolio.placeholder.com)
+*   **GitHub:** [https://github.com/arshad5678](https://github.com/arshad5678)
+
+---
+
+## 🤝 Contributing
+
+Contributions make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 💖 Support
+
+If you find this project helpful, please consider giving it a ⭐ on GitHub to show your support!
